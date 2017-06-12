@@ -48,8 +48,6 @@ static  JJRecordCrash *instance = nil;
         
         if (count >= crashCount) {
             
-            NSLog(@"多次崩溃");
-            
             //将本地文件崩溃次数重新置为0
             [[NSUserDefaults standardUserDefaults] setObject:@0 forKey:@"JJ_crashCount"];
             
@@ -58,7 +56,7 @@ static  JJRecordCrash *instance = nil;
             return;
         }
         
-        //崩溃次数未达到3次则向本地存储崩溃次数
+        //崩溃次数未达到次数则向本地存储崩溃次数
         crashNum = [NSNumber numberWithInteger:count];
         [[NSUserDefaults standardUserDefaults] setObject:crashNum forKey:@"JJ_crashCount"];
     }
