@@ -22,8 +22,8 @@ static  JJRecordCrash *instance = nil;
 
 - (void)recordCrashWithCrashCount:(NSInteger)crashCount handle:(void (^)())handle{
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(terminate) name:UIApplicationWillTerminateNotification object:nil];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
     
     BOOL isCrash = [[[NSUserDefaults standardUserDefaults] valueForKey:@"JJ_isCrash"] boolValue];
     
@@ -59,15 +59,24 @@ static  JJRecordCrash *instance = nil;
         //崩溃次数未达到次数则向本地存储崩溃次数
         crashNum = [NSNumber numberWithInteger:count];
         [[NSUserDefaults standardUserDefaults] setObject:crashNum forKey:@"JJ_crashCount"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     }
 }
 
 
-- (void)terminate{
+// app进入后台
+- (void)appEnterBackground{
     
     [[NSUserDefaults standardUserDefaults] setObject:@(NO) forKey:@"JJ_isCrash"];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
+// app回到前台
+- (void)appEnterForeground{
+    [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:@"JJ_isCrash"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 
 @end
+
